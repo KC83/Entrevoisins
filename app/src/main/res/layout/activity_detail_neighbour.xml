@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EEEEEE"
+    tools:context=".ui.neighbour_detail.DetailNeighbourActivity">
+
+    <ImageView
+        android:id="@+id/detail_avatar"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:contentDescription="@android:string/ok"
+        android:scaleType="fitXY"
+        app:srcCompat="@color/colorAccent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/detail_avatar_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="@android:string/ok"
+        android:textColor="#fff"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@id/detail_avatar"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/detail_home_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="#EEEEEE"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/detail_avatar"
+        app:srcCompat="?attr/homeAsUpIndicator" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/detail_fav_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="15dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@id/detail_name"
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@drawable/ic_star_yellow_24dp" />
+
+    <TextView
+        android:id="@+id/detail_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:background="#fff"
+        android:padding="10dp"
+        android:text="@android:string/ok"
+        android:textSize="24sp"
+        android:textColor="#000"
+        app:layout_constraintTop_toBottomOf="@id/detail_avatar"
+        tools:layout_editor_absoluteX="30dp" />
+
+</android.support.constraint.ConstraintLayout>
