@@ -38,7 +38,7 @@ public class NeighbourFragment extends Fragment {
 
     private boolean isSelected = false;
     public static final int DETAIL_NEIGHBOUR_ACTIVITY_REQUEST_CODE = 50;
-    private Constants mConstants;
+    private Constants mConstants = new Constants();
 
     /**
      * Create and return a new instance

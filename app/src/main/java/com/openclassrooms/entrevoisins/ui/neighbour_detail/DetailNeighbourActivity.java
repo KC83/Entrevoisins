@@ -35,7 +35,7 @@ public class DetailNeighbourActivity extends AppCompatActivity {
     FloatingActionButton mDetailFavBtn;
     TextView mDetailName;
 
-    Constants mConstants;
+    Constants mConstants = new Constants();
 
 
     @Override

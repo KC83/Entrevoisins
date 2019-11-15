@@ -26,7 +26,7 @@ public class ListNeighbourActivity extends AppCompatActivity {
     ListNeighbourPagerAdapter mPagerAdapter;
     SharedPreferences mPreferences;
 
-    Constants mConstants;
+    Constants mConstants = new Constants();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {

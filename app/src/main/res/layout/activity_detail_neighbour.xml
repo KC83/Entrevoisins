@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EEEEEE"
+    android:background="#fff"
     tools:context=".ui.neighbour_detail.DetailNeighbourActivity">
 
     <ImageView
@@ -13,8 +13,8 @@
         android:layout_height="250dp"
         android:contentDescription="@android:string/ok"
         android:scaleType="fitXY"
-        app:srcCompat="@color/colorAccent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@color/colorAccent" />
 
     <TextView
         android:id="@+id/detail_avatar_name"
@@ -33,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:clickable="true"
+        android:contentDescription="@android:string/VideoView_error_button"
         android:focusable="true"
         app:backgroundTint="#EEEEEE"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -48,23 +49,28 @@
         android:clickable="true"
         android:focusable="true"
         app:backgroundTint="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@id/detail_name"
+        app:layout_constraintBottom_toTopOf="@id/card_view"
         app:layout_constraintRight_toRightOf="parent"
         app:srcCompat="@drawable/ic_star_yellow_24dp" />
 
 
-
-    <TextView
-        android:id="@+id/detail_name"
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        android:background="#fff"
-        android:padding="10dp"
-        android:text="@android:string/ok"
-        android:textSize="24sp"
-        android:textColor="#000"
-        app:layout_constraintTop_toBottomOf="@id/detail_avatar"
-        tools:layout_editor_absoluteX="30dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detail_avatar">
+
+        <TextView
+            android:id="@+id/detail_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:text="@android:string/ok"
+            android:textColor="#000"
+            android:textSize="24sp" />
+    </android.support.v7.widget.CardView>
+
 
 </android.support.constraint.ConstraintLayout>
