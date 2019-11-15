@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.openclassrooms.entrevoisins.R;
 import com.openclassrooms.entrevoisins.model.Neighbour;
+import com.openclassrooms.entrevoisins.service.Constants;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -34,17 +35,20 @@ public class DetailNeighbourActivity extends AppCompatActivity {
     FloatingActionButton mDetailFavBtn;
     TextView mDetailName;
 
+    Constants mConstants;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_neighbour);
 
         // Initialization of preferences
-        mPreferences = getSharedPreferences("ENTREVOISINS",MODE_PRIVATE);
+        mPreferences = getSharedPreferences(mConstants.NAME_PREFERENCES,MODE_PRIVATE);
 
         // Get neighbour (format Json)
         Intent detailNeighbourActivityIntent = getIntent();
-        String jsonNeighbour = detailNeighbourActivityIntent.getStringExtra("JSON_NEIGHBOUR");
+        String jsonNeighbour = detailNeighbourActivityIntent.getStringExtra(mConstants.JSON_NEIGHBOUR);
 
         Type type = new TypeToken<Neighbour>(){}.getType();
         mNeighbour = new Gson().fromJson(jsonNeighbour, type);
@@ -84,9 +88,9 @@ public class DetailNeighbourActivity extends AppCompatActivity {
     }
 
     private void onFavoriteClicked() {
-        if(mPreferences.getString("FAVORITE_NEIGHBOURS", null) != null) {
+        if(mPreferences.getString(mConstants.FAVORITES_NEIGHBOURS, null) != null) {
             Type listType = new TypeToken<List<Neighbour>>() {}.getType();
-            mFavoritesNeighbours = new Gson().fromJson(mPreferences.getString("FAVORITE_NEIGHBOURS", null), listType);
+            mFavoritesNeighbours = new Gson().fromJson(mPreferences.getString(mConstants.FAVORITES_NEIGHBOURS, null), listType);
         }
 
         if(mNeighbour.isFavorite()) {
@@ -114,11 +118,11 @@ public class DetailNeighbourActivity extends AppCompatActivity {
         }
 
         if (mFavoritesNeighbours.size() == 0) {
-            mPreferences.edit().putString("FAVORITE_NEIGHBOURS",null).apply();
+            mPreferences.edit().putString(mConstants.FAVORITES_NEIGHBOURS,null).apply();
         } else {
             Gson gson = new Gson();
             String jsonFavoritesNeighbours = gson.toJson(mFavoritesNeighbours);
-            mPreferences.edit().putString("FAVORITE_NEIGHBOURS",jsonFavoritesNeighbours).apply();
+            mPreferences.edit().putString(mConstants.FAVORITES_NEIGHBOURS,jsonFavoritesNeighbours).apply();
         }
     }
 }
