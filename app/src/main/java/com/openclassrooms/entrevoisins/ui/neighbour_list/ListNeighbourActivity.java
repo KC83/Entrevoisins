@@ -36,7 +36,6 @@ public class ListNeighbourActivity extends AppCompatActivity {
 
         mPreferences = getSharedPreferences(mConstants.NAME_PREFERENCES,MODE_PRIVATE);
         //mPreferences.edit().clear().commit();
-        mPreferences.edit().putInt(mConstants.TAB,0).apply();
 
         setSupportActionBar(mToolbar);
         mPagerAdapter = new ListNeighbourPagerAdapter(getSupportFragmentManager());
@@ -47,7 +46,8 @@ public class ListNeighbourActivity extends AppCompatActivity {
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                mPreferences.edit().putInt(mConstants.TAB,tab.getPosition()).apply();
+                mPagerAdapter = new ListNeighbourPagerAdapter(getSupportFragmentManager());
+                mPagerAdapter.getItem(tab.getPosition());
                 mViewPager.setAdapter(mPagerAdapter);
             }
 

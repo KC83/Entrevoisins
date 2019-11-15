@@ -37,7 +37,6 @@ public class DetailNeighbourActivity extends AppCompatActivity {
 
     Constants mConstants = new Constants();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -27,7 +27,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -37,7 +36,6 @@ public class NeighbourFragment extends Fragment {
     private RecyclerView mRecyclerView;
 
     private boolean isSelected = false;
-    public static final int DETAIL_NEIGHBOUR_ACTIVITY_REQUEST_CODE = 50;
     private Constants mConstants = new Constants();
 
     /**
@@ -74,33 +72,10 @@ public class NeighbourFragment extends Fragment {
             return;
         }
 
-        SharedPreferences mPreferences = context.getSharedPreferences(mConstants.NAME_PREFERENCES,Context.MODE_PRIVATE);
         List<Neighbour> neighbours;
-        if (mPreferences.getInt(mConstants.TAB,0) == 1) {
-            if(mPreferences.getString(mConstants.FAVORITES_NEIGHBOURS, null) != null) {
-                Type type = new TypeToken<List<Neighbour>>(){}.getType();
-                neighbours = new Gson().fromJson(mPreferences.getString(mConstants.FAVORITES_NEIGHBOURS, null), type);
-            } else {
-                neighbours =  new ArrayList<>();
-            }
-        } else {
-            neighbours = mApiService.getNeighbours();
-        }
+        neighbours = mApiService.getNeighbours();
 
         mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(neighbours));
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-        initList();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -125,6 +100,7 @@ public class NeighbourFragment extends Fragment {
                 for (Neighbour neighbour : mFavoritesNeighbours) {
                     if (neighbour.equals(event.neighbour)) {
                         mFavoritesNeighbours.remove(neighbour);
+                        break;
                     }
                 }
 
@@ -181,6 +157,19 @@ public class NeighbourFragment extends Fragment {
 
         Intent detailNeighbourActivityIntent = new Intent(getActivity(), DetailNeighbourActivity.class);
         detailNeighbourActivityIntent.putExtra(mConstants.JSON_NEIGHBOUR, jsonNeighbour);
-        startActivityForResult(detailNeighbourActivityIntent, DETAIL_NEIGHBOUR_ACTIVITY_REQUEST_CODE);
+        startActivity(detailNeighbourActivityIntent);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+        initList();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 }
