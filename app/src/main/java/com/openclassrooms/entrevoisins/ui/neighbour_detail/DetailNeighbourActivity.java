@@ -1,13 +1,12 @@
 package com.openclassrooms.entrevoisins.ui.neighbour_detail;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,7 +30,7 @@ public class DetailNeighbourActivity extends AppCompatActivity {
 
     ImageView mDetailAvatar;
     TextView mDetailAvatarName;
-    FloatingActionButton mDetailHomeBtn;
+    ImageView mDetailHomeBtn;
     FloatingActionButton mDetailFavBtn;
     TextView mDetailName;
 
@@ -63,8 +62,7 @@ public class DetailNeighbourActivity extends AppCompatActivity {
             mDetailFavBtn.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
         }
 
-        Context holder = getApplicationContext();
-        Glide.with(holder)
+        Glide.with(this)
                 .load(mNeighbour.getAvatarUrl())
                 .into(mDetailAvatar);
 
@@ -80,44 +78,47 @@ public class DetailNeighbourActivity extends AppCompatActivity {
         mDetailFavBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if(mPreferences.getString("FAVORITE_NEIGHBOURS", null) != null) {
-                    Type listType = new TypeToken<List<Neighbour>>() {}.getType();
-                    mFavoritesNeighbours = new Gson().fromJson(mPreferences.getString("FAVORITE_NEIGHBOURS", null), listType);
-                }
-
-                if(mNeighbour.isFavorite()) {
-                    // Not favorite anymore
-                    mFavoritesNeighbours.remove(mNeighbour);
-
-                    // Message
-                    mNeighbour.setFavorite(false);
-                    Toast.makeText(holder,"Retirer des favoris", Toast.LENGTH_SHORT).show();
-
-                    // Change button style
-                    mDetailFavBtn.setImageResource(R.drawable.ic_star_yellow_24dp);
-                    mDetailFavBtn.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
-                } else {
-                    // New favorite
-                    mFavoritesNeighbours.add(mNeighbour);
-
-                    // Message
-                    mNeighbour.setFavorite(true);
-                    Toast.makeText(holder,"Ajouter aux favoris", Toast.LENGTH_SHORT).show();
-
-                    // Change button style
-                    mDetailFavBtn.setImageResource(R.drawable.ic_star_white_24dp);
-                    mDetailFavBtn.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
-                }
-
-                if (mFavoritesNeighbours.size() == 0) {
-                    mPreferences.edit().putString("FAVORITE_NEIGHBOURS",null).apply();
-                } else {
-                    Gson gson = new Gson();
-                    String jsonFavoritesNeighbours = gson.toJson(mFavoritesNeighbours);
-                    mPreferences.edit().putString("FAVORITE_NEIGHBOURS",jsonFavoritesNeighbours).apply();
-                }
+                onFavoriteClicked();
             }
         });
+    }
+
+    private void onFavoriteClicked() {
+        if(mPreferences.getString("FAVORITE_NEIGHBOURS", null) != null) {
+            Type listType = new TypeToken<List<Neighbour>>() {}.getType();
+            mFavoritesNeighbours = new Gson().fromJson(mPreferences.getString("FAVORITE_NEIGHBOURS", null), listType);
+        }
+
+        if(mNeighbour.isFavorite()) {
+            // Not favorite anymore
+            mFavoritesNeighbours.remove(mNeighbour);
+
+            // Message
+            mNeighbour.setFavorite(false);
+            Toast.makeText(this,"Retirer des favoris", Toast.LENGTH_SHORT).show();
+
+            // Change button style
+            mDetailFavBtn.setImageResource(R.drawable.ic_star_yellow_24dp);
+            mDetailFavBtn.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+        } else {
+            // New favorite
+            mFavoritesNeighbours.add(mNeighbour);
+
+            // Message
+            mNeighbour.setFavorite(true);
+            Toast.makeText(this,"Ajouter aux favoris", Toast.LENGTH_SHORT).show();
+
+            // Change button style
+            mDetailFavBtn.setImageResource(R.drawable.ic_star_white_24dp);
+            mDetailFavBtn.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
+        }
+
+        if (mFavoritesNeighbours.size() == 0) {
+            mPreferences.edit().putString("FAVORITE_NEIGHBOURS",null).apply();
+        } else {
+            Gson gson = new Gson();
+            String jsonFavoritesNeighbours = gson.toJson(mFavoritesNeighbours);
+            mPreferences.edit().putString("FAVORITE_NEIGHBOURS",jsonFavoritesNeighbours).apply();
+        }
     }
 }

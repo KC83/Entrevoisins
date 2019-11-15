@@ -6,7 +6,11 @@ public class DetailNeighbourEvent {
     /**
      * Neighbour to show detail
      */
-    public Neighbour neighbour;
+    private Neighbour neighbour;
+
+    public Neighbour getNeighbour() {
+        return neighbour;
+    }
 
     /**
      * Constructor.

@@ -37,6 +37,7 @@ public class NeighbourFragment extends Fragment {
     private List<Neighbour> mFavoritesNeighbours;
     private RecyclerView mRecyclerView;
 
+    private boolean isSelected = false;
     public static final int DETAIL_NEIGHBOUR_ACTIVITY_REQUEST_CODE = 50;
 
 
@@ -45,8 +46,7 @@ public class NeighbourFragment extends Fragment {
      * @return @{@link NeighbourFragment}
      */
     public static NeighbourFragment newInstance() {
-        NeighbourFragment fragment = new NeighbourFragment();
-        return fragment;
+        return new NeighbourFragment();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class NeighbourFragment extends Fragment {
         Context context = view.getContext();
         mRecyclerView = (RecyclerView) view;
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(context, DividerItemDecoration.VERTICAL));
         initList();
         return view;
     }
@@ -70,7 +70,12 @@ public class NeighbourFragment extends Fragment {
      * Init the List of neighbours
      */
     private void initList() {
-        SharedPreferences mPreferences = getContext().getSharedPreferences("ENTREVOISINS",Context.MODE_PRIVATE);
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+
+        SharedPreferences mPreferences = context.getSharedPreferences("ENTREVOISINS",Context.MODE_PRIVATE);
         if (mPreferences.getInt("TAB",0) == 1) {
             if(mPreferences.getString("FAVORITE_NEIGHBOURS", null) != null) {
                 Type type = new TypeToken<List<Neighbour>>(){}.getType();
@@ -106,7 +111,12 @@ public class NeighbourFragment extends Fragment {
     public void onDeleteNeighbour(DeleteNeighbourEvent event) {
         mApiService.deleteNeighbour(event.neighbour);
 
-        SharedPreferences mPreferences = getContext().getSharedPreferences("ENTREVOISINS",Context.MODE_PRIVATE);
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+
+        SharedPreferences mPreferences = context.getSharedPreferences("ENTREVOISINS",Context.MODE_PRIVATE);
         if(mPreferences.getString("FAVORITE_NEIGHBOURS", null) != null) {
             Type listType = new TypeToken<List<Neighbour>>() {}.getType();
             List<Neighbour> mFavoritesNeighbours = new Gson().fromJson(mPreferences.getString("FAVORITE_NEIGHBOURS", null), listType);
@@ -137,7 +147,12 @@ public class NeighbourFragment extends Fragment {
      */
     @Subscribe
     public void onDetailNeighbour(DetailNeighbourEvent event) {
-        SharedPreferences mPreferences = getContext().getSharedPreferences("ENTREVOISINS",Context.MODE_PRIVATE);
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+        SharedPreferences mPreferences = context.getSharedPreferences("ENTREVOISINS",Context.MODE_PRIVATE);
+
 
         Gson gson = new Gson();
         String jsonNeighbour = null;
@@ -151,17 +166,20 @@ public class NeighbourFragment extends Fragment {
             if (mFavoritesNeighbours != null) {
                 for (Neighbour neighbour : mFavoritesNeighbours) {
                     // Get good neighbour
-                    if (neighbour.equals(event.neighbour)) {
+                    if (neighbour.equals(event.getNeighbour())) {
                         getNeighbour = true;
                         jsonNeighbour = gson.toJson(neighbour);
+                        break;
                     }
                 }
             }
         }
 
         if (!getNeighbour) {
-            jsonNeighbour = gson.toJson(event.neighbour);
+            jsonNeighbour = gson.toJson(event.getNeighbour());
         }
+
+
 
         Intent detailNeighbourActivityIntent = new Intent(getActivity(), DetailNeighbourActivity.class);
         detailNeighbourActivityIntent.putExtra("JSON_NEIGHBOUR", jsonNeighbour);
