@@ -1,6 +1,7 @@
 package com.openclassrooms.entrevoisins.ui.neighbour_list;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,11 +16,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.openclassrooms.entrevoisins.R;
 import com.openclassrooms.entrevoisins.di.DI;
-import com.openclassrooms.entrevoisins.events.DeleteNeighbourEvent;
-import com.openclassrooms.entrevoisins.events.DetailNeighbourEvent;
+import com.openclassrooms.entrevoisins.events.DeleteFavoriteNeighbourEvent;
+import com.openclassrooms.entrevoisins.events.DetailFavoriteNeighbourEvent;
 import com.openclassrooms.entrevoisins.model.Neighbour;
 import com.openclassrooms.entrevoisins.service.Constants;
 import com.openclassrooms.entrevoisins.service.NeighbourApiService;
+import com.openclassrooms.entrevoisins.ui.neighbour_detail.DetailNeighbourActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,9 +34,6 @@ public class FavoriteNeighbourFragment extends Fragment {
 
     private NeighbourApiService mApiService;
     private RecyclerView mRecyclerView;
-
-    private boolean isSelected = false;
-    private Constants mConstants = new Constants();
 
     /**
      * Create and return a new instance
@@ -70,25 +69,89 @@ public class FavoriteNeighbourFragment extends Fragment {
             return;
         }
 
-        SharedPreferences mPreferences = context.getSharedPreferences(mConstants.NAME_PREFERENCES,Context.MODE_PRIVATE);
+        SharedPreferences mPreferences = context.getSharedPreferences(Constants.NAME_PREFERENCES,Context.MODE_PRIVATE);
         List<Neighbour> neighbours;
-        if(mPreferences.getString(mConstants.FAVORITES_NEIGHBOURS, null) != null) {
+        if(mPreferences.getString(Constants.FAVORITES_NEIGHBOURS, null) != null) {
             Type type = new TypeToken<List<Neighbour>>(){}.getType();
-            neighbours = new Gson().fromJson(mPreferences.getString(mConstants.FAVORITES_NEIGHBOURS, null), type);
+            neighbours = new Gson().fromJson(mPreferences.getString(Constants.FAVORITES_NEIGHBOURS, null), type);
         } else {
             neighbours =  new ArrayList<>();
         }
 
-        mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(neighbours));
+        mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(neighbours, mPreferences.getInt(Constants.TAB,0)));
     }
 
     @Subscribe
-    public void onDeleteNeighbour(DeleteNeighbourEvent event) {
+    public void onDeleteFavoriteNeighbour(DeleteFavoriteNeighbourEvent event) {
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+
+        mApiService.deleteNeighbour(event.neighbour);
+
+        SharedPreferences mPreferences = context.getSharedPreferences(Constants.NAME_PREFERENCES,Context.MODE_PRIVATE);
+        if(mPreferences.getString(Constants.FAVORITES_NEIGHBOURS, null) != null) {
+            Type listType = new TypeToken<List<Neighbour>>() {}.getType();
+            List<Neighbour> mFavoritesNeighbours = new Gson().fromJson(mPreferences.getString(Constants.FAVORITES_NEIGHBOURS, null), listType);
+
+            if (mFavoritesNeighbours != null) {
+                for (Neighbour neighbour : mFavoritesNeighbours) {
+                    if (neighbour.equals(event.neighbour)) {
+                        mFavoritesNeighbours.remove(neighbour);
+                        break;
+                    }
+                }
+
+                if (mFavoritesNeighbours.size() == 0) {
+                    mPreferences.edit().putString(Constants.FAVORITES_NEIGHBOURS,null).apply();
+                } else {
+                    Gson gson = new Gson();
+                    String jsonFavoritesNeighbours = gson.toJson(mFavoritesNeighbours);
+                    mPreferences.edit().putString(Constants.FAVORITES_NEIGHBOURS,jsonFavoritesNeighbours).apply();
+                }
+            }
+        }
+
         initList();
     }
 
     @Subscribe
-    public void onDetailNeighbour(DetailNeighbourEvent event) {
+    public void onDetailFavoriteNeighbour(DetailFavoriteNeighbourEvent event) {
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+        SharedPreferences mPreferences = context.getSharedPreferences(Constants.NAME_PREFERENCES,Context.MODE_PRIVATE);
+
+        Gson gson = new Gson();
+        String jsonNeighbour = null;
+
+        boolean getNeighbour = false;
+
+        if(mPreferences.getString(Constants.FAVORITES_NEIGHBOURS, null) != null) {
+            Type listType = new TypeToken<List<Neighbour>>() {}.getType();
+            List<Neighbour> favoritesNeighbours = new Gson().fromJson(mPreferences.getString(Constants.FAVORITES_NEIGHBOURS, null), listType);
+
+            if (favoritesNeighbours != null) {
+                for (Neighbour neighbour : favoritesNeighbours) {
+                    // Get good neighbour
+                    if (neighbour.equals(event.getNeighbour())) {
+                        getNeighbour = true;
+                        jsonNeighbour = gson.toJson(neighbour);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!getNeighbour) {
+            jsonNeighbour = gson.toJson(event.getNeighbour());
+        }
+
+        Intent detailNeighbourActivityIntent = new Intent(getActivity(), DetailNeighbourActivity.class);
+        detailNeighbourActivityIntent.putExtra(Constants.JSON_NEIGHBOUR, jsonNeighbour);
+        startActivity(detailNeighbourActivityIntent);
     }
 
     @Override

@@ -12,7 +12,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.openclassrooms.entrevoisins.R;
+import com.openclassrooms.entrevoisins.events.DeleteFavoriteNeighbourEvent;
 import com.openclassrooms.entrevoisins.events.DeleteNeighbourEvent;
+import com.openclassrooms.entrevoisins.events.DetailFavoriteNeighbourEvent;
 import com.openclassrooms.entrevoisins.events.DetailNeighbourEvent;
 import com.openclassrooms.entrevoisins.model.Neighbour;
 
@@ -26,9 +28,11 @@ import butterknife.ButterKnife;
 public class MyNeighbourRecyclerViewAdapter extends RecyclerView.Adapter<MyNeighbourRecyclerViewAdapter.ViewHolder> {
 
     private final List<Neighbour> mNeighbours;
+    private int mTab;
 
-    MyNeighbourRecyclerViewAdapter(List<Neighbour> items) {
+    MyNeighbourRecyclerViewAdapter(List<Neighbour> items, int tab) {
         mNeighbours = items;
+        mTab = tab;
     }
 
     @NonNull
@@ -51,13 +55,21 @@ public class MyNeighbourRecyclerViewAdapter extends RecyclerView.Adapter<MyNeigh
         holder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new DeleteNeighbourEvent(neighbour));
+                if (mTab == 1) {
+                    EventBus.getDefault().post(new DeleteFavoriteNeighbourEvent(neighbour));
+                } else {
+                    EventBus.getDefault().post(new DeleteNeighbourEvent(neighbour));
+                }
             }
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventBus.getDefault().post(new DetailNeighbourEvent(neighbour));
+                if (mTab == 1) {
+                    EventBus.getDefault().post(new DetailFavoriteNeighbourEvent(neighbour));
+                } else {
+                    EventBus.getDefault().post(new DetailNeighbourEvent(neighbour));
+                }
             }
         });
     }

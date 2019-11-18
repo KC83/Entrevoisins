@@ -25,8 +25,6 @@ public class ListNeighbourActivity extends AppCompatActivity {
 
     ListNeighbourPagerAdapter mPagerAdapter;
     SharedPreferences mPreferences;
-
-    Constants mConstants = new Constants();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +32,8 @@ public class ListNeighbourActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_neighbour);
         ButterKnife.bind(this);
 
-        mPreferences = getSharedPreferences(mConstants.NAME_PREFERENCES,MODE_PRIVATE);
+        mPreferences = getSharedPreferences(Constants.NAME_PREFERENCES,MODE_PRIVATE);
+        mPreferences.edit().putInt(Constants.TAB,0).apply(); // Default -> 0
         //mPreferences.edit().clear().commit();
 
         setSupportActionBar(mToolbar);
@@ -46,6 +45,8 @@ public class ListNeighbourActivity extends AppCompatActivity {
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                mPreferences.edit().putInt(Constants.TAB,tab.getPosition()).apply();
+
                 mPagerAdapter = new ListNeighbourPagerAdapter(getSupportFragmentManager());
                 mPagerAdapter.getItem(tab.getPosition());
                 mViewPager.setAdapter(mPagerAdapter);
