@@ -6,7 +6,7 @@ An application that allows people from the same neighborhood to help each other.
 - Delete neighbours
 
 <b>UPDATE :</b>
-- Get neighbour details
+- Get neighbours details
 - Add neighbours in the favorites list
 - Remove neighbours from the user favorites
 - Get the neighbours favorites list
