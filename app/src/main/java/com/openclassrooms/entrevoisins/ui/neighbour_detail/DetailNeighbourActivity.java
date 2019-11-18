@@ -61,6 +61,7 @@ public class DetailNeighbourActivity extends AppCompatActivity {
         if(mNeighbour.isFavorite()) {
             mDetailFavBtn.setImageResource(R.drawable.ic_star_white_24dp);
             mDetailFavBtn.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
+            mDetailFavBtn.setTag("isFavorite");
         }
 
         Glide.with(this)
@@ -101,6 +102,7 @@ public class DetailNeighbourActivity extends AppCompatActivity {
             // Change button style
             mDetailFavBtn.setImageResource(R.drawable.ic_star_yellow_24dp);
             mDetailFavBtn.setBackgroundTintList(ColorStateList.valueOf(Color.WHITE));
+            mDetailFavBtn.setTag("");
         } else {
             // New favorite
             mFavoritesNeighbours.add(mNeighbour);
@@ -112,6 +114,7 @@ public class DetailNeighbourActivity extends AppCompatActivity {
             // Change button style
             mDetailFavBtn.setImageResource(R.drawable.ic_star_white_24dp);
             mDetailFavBtn.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
+            mDetailFavBtn.setTag("isFavorite");
         }
 
         if (mFavoritesNeighbours.size() == 0) {
