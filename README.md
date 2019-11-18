@@ -3,12 +3,12 @@
 An application that allows people from the same neighborhood to help each other.<br><br>
 <b>FEATURES :</b>
 - Get the neighbours list
-- Delete neighbour
+- Delete neighbours
 
 <b>UPDATE :</b>
 - Get neighbour details
-- Add neighbour in the favorites list
-- Remove a neighbour from the user favorites
+- Add neighbours in the favorites list
+- Remove neighbours from the user favorites
 - Get the neighbours favorites list
 
 <h3>Download, compile and execute the project in Android Studio</h3>
