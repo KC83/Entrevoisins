@@ -9,9 +9,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -50,48 +50,39 @@ public class NeighbourServiceTest {
         assertNotNull(neighbour.getId());
         assertNotNull(neighbour.getAvatarUrl());
         assertNotNull(neighbour.getName());
+        assertFalse(neighbour.isFavorite());
     }
 
     @Test
     public void addNeighbourInFavorites() {
-        List<Neighbour> favoritesNeighbours = new ArrayList<Neighbour>();
-
+        service.setFavorite(0, true);
         Neighbour neighbour = service.getNeighbours().get(0);
-        neighbour.setFavorite(true);
-
-        favoritesNeighbours.add(neighbour);
-        assertTrue(favoritesNeighbours.contains(neighbour));
         assertTrue(neighbour.isFavorite());
     }
 
     @Test
     public void removeNeighbourFromFavorites() {
-        List<Neighbour> favoritesNeighbours = new ArrayList<Neighbour>();
-
+        service.setFavorite(0, false);
         Neighbour neighbour = service.getNeighbours().get(0);
-        neighbour.setFavorite(true);
-
-        // Add in favorite
-        favoritesNeighbours.add(neighbour);
-        assertTrue(favoritesNeighbours.contains(neighbour));
-        assertTrue(neighbour.isFavorite());
-
-        // Remove from favorite
-        neighbour.setFavorite(false);
-        favoritesNeighbours.remove(neighbour);
-        assertFalse(favoritesNeighbours.contains(neighbour));
         assertFalse(neighbour.isFavorite());
     }
 
     @Test
     public void getFavoritesNeighboursWithSuccess() {
-        List<Neighbour> favoritesNeighbours = new ArrayList<Neighbour>();
+        service.setFavorite(0,true);
+        service.setFavorite(3, true);
+        List<Neighbour> favoritesNeighbours = service.getFavoritesNeighbours();
 
-        Neighbour neighbour = service.getNeighbours().get(0);
-        neighbour.setFavorite(true);
-        favoritesNeighbours.add(neighbour);
+        assertEquals(2,favoritesNeighbours.size());
 
-        assertTrue(favoritesNeighbours.contains(neighbour));
-        assertTrue(neighbour.isFavorite());
+        assertEquals("1",favoritesNeighbours.get(0).getId().toString());
+        assertEquals("Caroline",favoritesNeighbours.get(0).getName());
+        assertEquals("http://i.pravatar.cc/150?u=a042581f4e29026704d", favoritesNeighbours.get(0).getAvatarUrl());
+        assertTrue(favoritesNeighbours.get(0).isFavorite());
+
+        assertEquals("4",favoritesNeighbours.get(1).getId().toString());
+        assertEquals("Vincent",favoritesNeighbours.get(1).getName());
+        assertEquals("http://i.pravatar.cc/150?u=a042581f4e29026704a", favoritesNeighbours.get(1).getAvatarUrl());
+        assertTrue(favoritesNeighbours.get(1).isFavorite());
     }
 }

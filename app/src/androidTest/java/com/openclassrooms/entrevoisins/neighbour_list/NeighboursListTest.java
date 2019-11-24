@@ -53,11 +53,11 @@ public class NeighboursListTest {
         mActivity = mActivityRule.getActivity();
         assertThat(mActivity, notNullValue());
     }
-
-    /*@Rule
+    
+    /*
+    @Rule
     public CountingIdlingResource mResource = new CountingIdlingResource("TEST");
     */
-
 
     /**
      * We ensure that our recyclerview is displaying at least on item
