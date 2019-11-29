@@ -1,7 +1,6 @@
 
 package com.openclassrooms.entrevoisins.neighbour_list;
 
-import android.support.test.espresso.PerformException;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
@@ -99,7 +98,7 @@ public class NeighboursListTest {
     public void myNeighboursList_neighbourNameShouldNotBeEmpty() {
         // When perform a click on a item
         onView(withId(R.id.list_neighbours)).perform(actionOnItemAtPosition(0,click()));
-        // Then : check if the name is dispplayed
+        // Then : check if the name is displayed
         onView(withId(R.id.detail_name)).check(matches(isDisplayed()));
         // And check if the name equal to the first neighbour in the neighbour list
         onView(withId(R.id.detail_name)).check(matches(withText("Caroline")));
@@ -110,45 +109,27 @@ public class NeighboursListTest {
      */
     @Test
     public void myNeighboursList_onlyShowFavoritesNeighbours() {
-        try {
-            // TRY IF THE LIST OF FAVORITES IS NOT EMPTY
+        // Select the tab "MY NEIGHBOURS"
+        Matcher<View> matcher = allOf(withText("MY NEIGHBOURS"), isDescendantOfA(withId(R.id.tabs)));
+        onView(matcher).perform(click());
 
-            // Select the good tab
-            Matcher<View> matcher = allOf(withText("FAVORITES"), isDescendantOfA(withId(R.id.tabs)));
-            onView(matcher).perform(click());
-
-            // When perform a click on a item
-            onView(withId(R.id.list_favorites_neighbours)).perform(actionOnItemAtPosition(0,click()));
-            // Then : check if the button of varite is displayed
-            onView(withId(R.id.detail_fav_btn)).check(matches(isDisplayed()));
-            // And check if the neighbour is favorite
-            onView(allOf(withId(R.id.detail_fav_btn), withTagValue(is((Object) "isFavorite")))).check(matches(isDisplayed()));
-        } catch (PerformException e) {
-            // IF THE LIST OF FAVORITES IS EMPTY, WE HAD THE FIRST NEIGHBOUR IN THE LIST OF FAVORITE
-
-            // Select the tab "MY NEIGHBOURS"
-            Matcher<View> matcher = allOf(withText("MY NEIGHBOURS"), isDescendantOfA(withId(R.id.tabs)));
-            onView(matcher).perform(click());
-
-            // When perform a click on a item
-            onView(withId(R.id.list_neighbours)).perform(actionOnItemAtPosition(0,click()));
-            // Then : perform a click on the fav button
-            onView(withId(R.id.detail_fav_btn)).perform(click());
-            // Close DetailPage
-            pressBack();
+        // When perform a click on a item
+        onView(withId(R.id.list_neighbours)).perform(actionOnItemAtPosition(0,click()));
+        // Then : perform a click on the fav button
+        onView(withId(R.id.detail_fav_btn)).perform(click());
+        // Close DetailPage
+        pressBack();
 
 
-            // Select the good tab
-            Matcher<View> newMatcher = allOf(withText("FAVORITES"), isDescendantOfA(withId(R.id.tabs)));
-            onView(newMatcher).perform(click());
+        // Select the good tab
+        Matcher<View> newMatcher = allOf(withText("FAVORITES"), isDescendantOfA(withId(R.id.tabs)));
+        onView(newMatcher).perform(click());
 
-            // When perform a click on a item
-            onView(withId(R.id.list_favorites_neighbours)).perform(actionOnItemAtPosition(0,click()));
-            // Then : check if the button of varite is displayed
-            onView(withId(R.id.detail_fav_btn)).check(matches(isDisplayed()));
-            // And check if the neighbour is favorite
-            onView(allOf(withId(R.id.detail_fav_btn), withTagValue(is((Object) "isFavorite")))).check(matches(isDisplayed()));
-
-        }
+        // When perform a click on a item
+        onView(withId(R.id.list_favorites_neighbours)).perform(actionOnItemAtPosition(0,click()));
+        // Then : check if the button of varite is displayed
+        onView(withId(R.id.detail_fav_btn)).check(matches(isDisplayed()));
+        // And check if the neighbour is favorite
+        onView(allOf(withId(R.id.detail_fav_btn), withTagValue(is((Object) "isFavorite")))).check(matches(isDisplayed()));
     }
 }

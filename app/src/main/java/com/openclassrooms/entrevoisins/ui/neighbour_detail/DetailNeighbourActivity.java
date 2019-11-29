@@ -1,7 +1,6 @@
 package com.openclassrooms.entrevoisins.ui.neighbour_detail;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,8 +15,10 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.openclassrooms.entrevoisins.R;
+import com.openclassrooms.entrevoisins.di.DI;
 import com.openclassrooms.entrevoisins.model.Neighbour;
 import com.openclassrooms.entrevoisins.service.Constants;
+import com.openclassrooms.entrevoisins.service.NeighbourApiService;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -25,9 +26,12 @@ import java.util.List;
 
 public class DetailNeighbourActivity extends AppCompatActivity {
 
-    Neighbour mNeighbour;
+    NeighbourApiService mApiService;
     List<Neighbour> mFavoritesNeighbours = new ArrayList<>();
-    SharedPreferences mPreferences;
+    List<Neighbour> mNeighbours;
+    Neighbour mNeighbour;
+
+    int mPosition;
 
     ImageView mDetailAvatar;
     TextView mDetailAvatarName;
@@ -40,15 +44,17 @@ public class DetailNeighbourActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_neighbour);
 
-        // Initialization of preferences
-        mPreferences = getSharedPreferences(Constants.NAME_PREFERENCES,MODE_PRIVATE);
+        // Initialization of the service
+        mApiService = DI.getNeighbourApiService();
 
         // Get neighbour (format Json)
         Intent detailNeighbourActivityIntent = getIntent();
         String jsonNeighbour = detailNeighbourActivityIntent.getStringExtra(Constants.JSON_NEIGHBOUR);
-
         Type type = new TypeToken<Neighbour>(){}.getType();
         mNeighbour = new Gson().fromJson(jsonNeighbour, type);
+
+        // Get the position of the neighbour
+        mPosition = getNeighbourPosition();
 
         // Initialization of layout id
         mDetailAvatar = findViewById(R.id.detail_avatar);
@@ -86,14 +92,9 @@ public class DetailNeighbourActivity extends AppCompatActivity {
     }
 
     private void onFavoriteClicked() {
-        if(mPreferences.getString(Constants.FAVORITES_NEIGHBOURS, null) != null) {
-            Type listType = new TypeToken<List<Neighbour>>() {}.getType();
-            mFavoritesNeighbours = new Gson().fromJson(mPreferences.getString(Constants.FAVORITES_NEIGHBOURS, null), listType);
-        }
-
         if(mNeighbour.isFavorite()) {
             // Not favorite anymore
-            mFavoritesNeighbours.remove(mNeighbour);
+            mApiService.setFavorite(mPosition, false);
 
             // Message
             mNeighbour.setFavorite(false);
@@ -105,7 +106,7 @@ public class DetailNeighbourActivity extends AppCompatActivity {
             mDetailFavBtn.setTag("");
         } else {
             // New favorite
-            mFavoritesNeighbours.add(mNeighbour);
+           mApiService.setFavorite(mPosition,true);
 
             // Message
             mNeighbour.setFavorite(true);
@@ -116,13 +117,17 @@ public class DetailNeighbourActivity extends AppCompatActivity {
             mDetailFavBtn.setBackgroundTintList(ColorStateList.valueOf(Color.YELLOW));
             mDetailFavBtn.setTag("isFavorite");
         }
+    }
+    private int getNeighbourPosition() {
+        mNeighbours = mApiService.getNeighbours();
+        int position = 0;
 
-        if (mFavoritesNeighbours.size() == 0) {
-            mPreferences.edit().putString(Constants.FAVORITES_NEIGHBOURS,null).apply();
-        } else {
-            Gson gson = new Gson();
-            String jsonFavoritesNeighbours = gson.toJson(mFavoritesNeighbours);
-            mPreferences.edit().putString(Constants.FAVORITES_NEIGHBOURS,jsonFavoritesNeighbours).apply();
+        for (Neighbour neighbour : mNeighbours) {
+            if (neighbour.equals(mNeighbour)) {
+                break;
+            }
+            position++;
         }
+        return position;
     }
 }

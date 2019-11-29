@@ -1,6 +1,5 @@
 package com.openclassrooms.entrevoisins.ui.neighbour_list;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -8,7 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.openclassrooms.entrevoisins.R;
-import com.openclassrooms.entrevoisins.service.Constants;
+import com.openclassrooms.entrevoisins.di.DI;
+import com.openclassrooms.entrevoisins.service.NeighbourApiService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,7 +24,7 @@ public class ListNeighbourActivity extends AppCompatActivity {
     ViewPager mViewPager;
 
     ListNeighbourPagerAdapter mPagerAdapter;
-    SharedPreferences mPreferences;
+    NeighbourApiService mApiService;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +32,7 @@ public class ListNeighbourActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_neighbour);
         ButterKnife.bind(this);
 
-        mPreferences = getSharedPreferences(Constants.NAME_PREFERENCES,MODE_PRIVATE);
-        mPreferences.edit().putInt(Constants.TAB,0).apply(); // Default -> 0
-        //mPreferences.edit().clear().commit();
+        mApiService = DI.getNeighbourApiService();
 
         setSupportActionBar(mToolbar);
         mPagerAdapter = new ListNeighbourPagerAdapter(getSupportFragmentManager());
@@ -45,8 +43,7 @@ public class ListNeighbourActivity extends AppCompatActivity {
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                mPreferences.edit().putInt(Constants.TAB,tab.getPosition()).apply();
-
+                mApiService.setTabSelected(tab.getPosition());
                 mPagerAdapter = new ListNeighbourPagerAdapter(getSupportFragmentManager());
                 mPagerAdapter.getItem(tab.getPosition());
                 mViewPager.setAdapter(mPagerAdapter);

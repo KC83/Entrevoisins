@@ -22,7 +22,19 @@ public interface NeighbourApiService {
      */
     void deleteNeighbour(Neighbour neighbour);
 
+    /**
+     * Set to a neighbour the value of isFavorite
+     * @param position
+     * @param isFavorite
+     */
     void setFavorite(int position, boolean isFavorite);
 
+    /**
+     * Get all my FavoritesNeighbours
+     * @return {@link List}
+     */
     List<Neighbour> getFavoritesNeighbours();
+
+    void setTabSelected(int tabSelected);
+    int getTabSelected();
 }
