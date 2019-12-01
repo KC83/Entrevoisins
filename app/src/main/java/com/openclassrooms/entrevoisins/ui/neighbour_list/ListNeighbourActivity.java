@@ -43,7 +43,6 @@ public class ListNeighbourActivity extends AppCompatActivity {
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                mApiService.setTabSelected(tab.getPosition());
                 mPagerAdapter = new ListNeighbourPagerAdapter(getSupportFragmentManager());
                 mPagerAdapter.getItem(tab.getPosition());
                 mViewPager.setAdapter(mPagerAdapter);

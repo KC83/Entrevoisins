@@ -11,7 +11,6 @@ import java.util.List;
 public class DummyNeighbourApiService implements  NeighbourApiService {
 
     private List<Neighbour> neighbours = DummyNeighbourGenerator.generateNeighbours();
-    private int tab;
 
     /**
      * {@inheritDoc}
@@ -50,21 +49,5 @@ public class DummyNeighbourApiService implements  NeighbourApiService {
         }
 
         return favoritesNeighbours;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setTabSelected(int tabSelected) {
-        tab = tabSelected;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getTabSelected() {
-        return tab;
     }
 }

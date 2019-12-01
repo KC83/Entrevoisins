@@ -6,7 +6,8 @@ public class DetailNeighbourEvent {
     /**
      * Neighbour to show detail
      */
-    private Neighbour neighbour;
+    private final Neighbour neighbour;
+    private final int mPosition;
 
     public Neighbour getNeighbour() {
         return neighbour;
@@ -16,7 +17,13 @@ public class DetailNeighbourEvent {
      * Constructor.
      * @param neighbour
      */
-    public DetailNeighbourEvent(Neighbour neighbour) {
+    public DetailNeighbourEvent(Neighbour neighbour, int position) {
         this.neighbour = neighbour;
+        mPosition = position;
+    }
+
+
+    public int getPosition() {
+        return mPosition;
     }
 }

@@ -69,7 +69,7 @@ public class NeighbourFragment extends Fragment {
         List<Neighbour> neighbours;
         neighbours = mApiService.getNeighbours();
 
-        mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(neighbours, mApiService.getTabSelected()));
+        mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(neighbours, Constants.NEIGHBOUR_TAB));
     }
 
     /**
@@ -103,6 +103,7 @@ public class NeighbourFragment extends Fragment {
 
         Intent detailNeighbourActivityIntent = new Intent(getActivity(), DetailNeighbourActivity.class);
         detailNeighbourActivityIntent.putExtra(Constants.JSON_NEIGHBOUR, jsonNeighbour);
+        detailNeighbourActivityIntent.putExtra(Constants.EXTRA_NEIGHBOUR_POSITION, event.getPosition());
         startActivity(detailNeighbourActivityIntent);
     }
 

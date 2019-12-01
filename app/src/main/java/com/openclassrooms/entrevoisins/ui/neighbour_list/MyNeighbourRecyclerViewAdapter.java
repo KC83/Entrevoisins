@@ -17,6 +17,7 @@ import com.openclassrooms.entrevoisins.events.DeleteNeighbourEvent;
 import com.openclassrooms.entrevoisins.events.DetailFavoriteNeighbourEvent;
 import com.openclassrooms.entrevoisins.events.DetailNeighbourEvent;
 import com.openclassrooms.entrevoisins.model.Neighbour;
+import com.openclassrooms.entrevoisins.service.Constants;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -55,7 +56,7 @@ public class MyNeighbourRecyclerViewAdapter extends RecyclerView.Adapter<MyNeigh
         holder.mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mTab == 1) {
+                if (mTab == Constants.FAVORITE_NEIGHBOUR_TAB) {
                     EventBus.getDefault().post(new DeleteFavoriteNeighbourEvent(neighbour));
                 } else {
                     EventBus.getDefault().post(new DeleteNeighbourEvent(neighbour));
@@ -65,10 +66,10 @@ public class MyNeighbourRecyclerViewAdapter extends RecyclerView.Adapter<MyNeigh
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (mTab == 1) {
-                    EventBus.getDefault().post(new DetailFavoriteNeighbourEvent(neighbour));
+                if (mTab == Constants.FAVORITE_NEIGHBOUR_TAB) {
+                    EventBus.getDefault().post(new DetailFavoriteNeighbourEvent(neighbour, holder.getAdapterPosition()));
                 } else {
-                    EventBus.getDefault().post(new DetailNeighbourEvent(neighbour));
+                    EventBus.getDefault().post(new DetailNeighbourEvent(neighbour, holder.getAdapterPosition()));
                 }
             }
         });

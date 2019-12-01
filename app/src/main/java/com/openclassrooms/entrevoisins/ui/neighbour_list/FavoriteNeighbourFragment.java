@@ -66,7 +66,7 @@ public class FavoriteNeighbourFragment extends Fragment {
         }
 
         List<Neighbour> neighbours = mApiService.getFavoritesNeighbours();
-        mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(neighbours, mApiService.getTabSelected()));
+        mRecyclerView.setAdapter(new MyNeighbourRecyclerViewAdapter(neighbours, Constants.FAVORITE_NEIGHBOUR_TAB));
     }
 
     @Subscribe

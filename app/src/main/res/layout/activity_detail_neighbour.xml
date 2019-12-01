@@ -14,7 +14,8 @@
         android:contentDescription="@android:string/ok"
         android:scaleType="fitXY"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@color/colorAccent" />
+        app:srcCompat="@color/colorAccent"
+        tools:layout_editor_absoluteX="0dp" />
 
     <TextView
         android:id="@+id/detail_avatar_name"
@@ -26,19 +27,6 @@
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@id/detail_avatar"
         app:layout_constraintLeft_toLeftOf="parent" />
-
-    <ImageView
-        android:id="@+id/detail_home_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:clickable="true"
-        android:contentDescription="@android:string/VideoView_error_button"
-        android:focusable="true"
-        app:backgroundTint="#EEEEEE"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@id/detail_avatar"
-        app:srcCompat="?attr/homeAsUpIndicator" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/detail_fav_btn"

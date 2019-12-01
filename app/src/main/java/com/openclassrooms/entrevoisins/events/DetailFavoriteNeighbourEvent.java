@@ -7,6 +7,7 @@ public class DetailFavoriteNeighbourEvent {
      * Neighbour to show detail
      */
     private Neighbour neighbour;
+    private int mPosition;
 
     public Neighbour getNeighbour() {
         return neighbour;
@@ -15,8 +16,14 @@ public class DetailFavoriteNeighbourEvent {
     /**
      * Constructor.
      * @param neighbour
+     * @param adapterPosition
      */
-    public DetailFavoriteNeighbourEvent(Neighbour neighbour) {
+    public DetailFavoriteNeighbourEvent(Neighbour neighbour, int adapterPosition) {
         this.neighbour = neighbour;
+        mPosition = adapterPosition;
+    }
+
+    public int getAdapterPosition() {
+        return mPosition;
     }
 }

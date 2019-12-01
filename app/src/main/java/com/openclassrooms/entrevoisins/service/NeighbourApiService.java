@@ -35,6 +35,4 @@ public interface NeighbourApiService {
      */
     List<Neighbour> getFavoritesNeighbours();
 
-    void setTabSelected(int tabSelected);
-    int getTabSelected();
 }

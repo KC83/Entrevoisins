@@ -5,7 +5,9 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,21 +23,16 @@ import com.openclassrooms.entrevoisins.service.Constants;
 import com.openclassrooms.entrevoisins.service.NeighbourApiService;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DetailNeighbourActivity extends AppCompatActivity {
 
     NeighbourApiService mApiService;
-    List<Neighbour> mFavoritesNeighbours = new ArrayList<>();
-    List<Neighbour> mNeighbours;
     Neighbour mNeighbour;
 
     int mPosition;
 
     ImageView mDetailAvatar;
     TextView mDetailAvatarName;
-    ImageView mDetailHomeBtn;
     FloatingActionButton mDetailFavBtn;
     TextView mDetailName;
 
@@ -43,6 +40,12 @@ public class DetailNeighbourActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_neighbour);
+
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setDisplayShowHomeEnabled(true);
+        }
 
         // Initialization of the service
         mApiService = DI.getNeighbourApiService();
@@ -54,12 +57,11 @@ public class DetailNeighbourActivity extends AppCompatActivity {
         mNeighbour = new Gson().fromJson(jsonNeighbour, type);
 
         // Get the position of the neighbour
-        mPosition = getNeighbourPosition();
+        mPosition = detailNeighbourActivityIntent.getIntExtra(Constants.EXTRA_NEIGHBOUR_POSITION,0);
 
         // Initialization of layout id
         mDetailAvatar = findViewById(R.id.detail_avatar);
         mDetailAvatarName = findViewById(R.id.detail_avatar_name);
-        mDetailHomeBtn = findViewById(R.id.detail_home_btn);
         mDetailFavBtn = findViewById(R.id.detail_fav_btn);
         mDetailName = findViewById(R.id.detail_name);
 
@@ -77,12 +79,7 @@ public class DetailNeighbourActivity extends AppCompatActivity {
         mDetailAvatarName.setText(mNeighbour.getName());
         mDetailName.setText(mNeighbour.getName());
 
-        mDetailHomeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+
         mDetailFavBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,16 +115,15 @@ public class DetailNeighbourActivity extends AppCompatActivity {
             mDetailFavBtn.setTag("isFavorite");
         }
     }
-    private int getNeighbourPosition() {
-        mNeighbours = mApiService.getNeighbours();
-        int position = 0;
 
-        for (Neighbour neighbour : mNeighbours) {
-            if (neighbour.equals(mNeighbour)) {
-                break;
-            }
-            position++;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
-        return position;
+
+        return super.onOptionsItemSelected(item);
+
     }
 }
